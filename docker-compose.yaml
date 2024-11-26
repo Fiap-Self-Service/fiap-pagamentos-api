@@ -1,0 +1,39 @@
+services:
+  fiap-pagamentos-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - fiap-pagamentos-api-net
+    restart: always
+    depends_on:
+      - fiap-pagamentos-api-db-documents
+    ports:
+      - 3000:3000
+    environment:
+      DOCUMENT_DATABASE_HOST: fiap-pagamentos-api-db-documents
+      DOCUMENT_DATABASE_PORT: 27017
+      DOCUMENT_DATABASE_USERNAME: fiap
+      DOCUMENT_DATABASE_PASSWORD: fiap
+      DOCUMENT_DATABASE_DATABASE: fiap
+  
+  fiap-pagamentos-api-db-documents:
+    image: mongo:6.0
+    restart: always
+    networks:
+      - fiap-pagamentos-api-net
+    volumes:
+      - document_data_fiap_pagamentos:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: fiap
+      MONGO_INITDB_ROOT_USERNAME: fiap
+      MONGO_INITDB_ROOT_PASSWORD: fiap
+
+volumes:
+  document_data_fiap_pagamentos: {}
+
+networks:
+  fiap-pagamentos-api-net:
+    driver: bridge
