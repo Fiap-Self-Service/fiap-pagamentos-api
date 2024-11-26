@@ -45,28 +45,26 @@ describe('ConsultarIntencaoPagamentoPorIdController', () => {
   describe('execute', () => {
     it('Deve chamar o ConsultarIntencaoPagamentoPorIdUseCase e retornar o IntencaoPagamentoDTO correto', async () => {
       const idIntencaoPagamento = 'intencao-id';
-      const intencaoPagamentoDTO: IntencaoPagamentoDTO = {
-        id: idIntencaoPagamento,
-        status: 'EM_ANALISE',
-        dataCriacao: new Date(),
-        dataFinalizacao: null,
-        qrCode: 'qr-code',
-        idExterno: 'id-externo',
-        data: null,
-      };
+      const intencaoPagamentoDTO = new IntencaoPagamentoDTO();
+      intencaoPagamentoDTO.id = idIntencaoPagamento;
+      intencaoPagamentoDTO.status = 'EM_ANALISE';
+      intencaoPagamentoDTO.dataCriacao = new Date();
+      intencaoPagamentoDTO.dataFinalizacao = null;
+      intencaoPagamentoDTO.qrCode = 'qr-code';
+      intencaoPagamentoDTO.idExterno = 'id-externo';
+      intencaoPagamentoDTO.data = null;
+      (
+        consultarIntencaoPagamentoPorIdUseCase.execute as jest.Mock
+      ).mockResolvedValue(intencaoPagamentoDTO);
 
-      (consultarIntencaoPagamentoPorIdUseCase.execute as jest.Mock).mockResolvedValue(
-        intencaoPagamentoDTO,
-      );
+      const result =
+        await consultarIntencaoPagamentoPorIdController.execute(
+          idIntencaoPagamento,
+        );
 
-      const result = await consultarIntencaoPagamentoPorIdController.execute(
-        idIntencaoPagamento,
-      );
-
-      expect(consultarIntencaoPagamentoPorIdUseCase.execute).toHaveBeenCalledWith(
-        intencaoPagamentoGateway,
-        idIntencaoPagamento,
-      );
+      expect(
+        consultarIntencaoPagamentoPorIdUseCase.execute,
+      ).toHaveBeenCalledWith(intencaoPagamentoGateway, idIntencaoPagamento);
 
       expect(result).toEqual(intencaoPagamentoDTO);
     });

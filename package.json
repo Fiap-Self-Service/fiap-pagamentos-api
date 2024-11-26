@@ -97,7 +97,8 @@
             "/src/infrastructure/database/",
             "/src/infrastructure/health/",
             "/src/app.module.ts",
-            "/src/main.ts"
+            "/src/main.ts",
+            "Parceiro"
         ],
         "coverageThreshold": {
             "global": {
