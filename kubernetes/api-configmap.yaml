@@ -6,7 +6,6 @@ metadata:
   labels:
     name: fiap-pagamentos-api-config
 data:
-  DATABASE_HOST: "terraform-20241120192055796800000001.c1pqiiycvnmd.us-east-1.rds.amazonaws.com"
-  DATABASE_PORT: "3306"
-  DATABASE_DATABASE: "produto"
+  DOCUMENT_DATABASE_HOST: "a4c4b72dafb8f4fc88124f7326b4a27b-1328249940.us-east-1.elb.amazonaws.com"
+  DOCUMENT_DATABASE_PORT: "27017"
   APPLICATION_PORT: "3000"
