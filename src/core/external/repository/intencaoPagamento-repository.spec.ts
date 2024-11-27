@@ -73,15 +73,14 @@ describe('IntencaoRepository', () => {
   describe('buscarPorIdPagamento', () => {
     it('deve retornar a intenção de pagamento quando encontrada', async () => {
       const id = new ObjectId().toString();
-      const mockEntity: IntencaoPagamentoEntity = {
-        id: new ObjectId(id),
-        status: 'PENDENTE',
-        dataCriacao: new Date(),
-        dataFinalizacao: new Date(),
-        qrCode: 'qrcode',
-        idExterno: 'id-externo',
-        data: null,
-      };
+      const mockEntity = new IntencaoPagamentoEntity();
+      mockEntity.id = new ObjectId(id);
+      mockEntity.status = 'PENDENTE';
+      mockEntity.dataCriacao = new Date();
+      mockEntity.dataFinalizacao = new Date();
+      mockEntity.qrCode = 'qrcode';
+      mockEntity.idExterno = 'id-externo';
+      mockEntity.data = null;
 
       mockMongoRepository.findOneBy.mockResolvedValue(mockEntity);
 
