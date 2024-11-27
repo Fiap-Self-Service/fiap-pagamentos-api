@@ -17,8 +17,8 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json",
-        "test:cucumber": "NODE_ENV=test cucumber-js --require-module ts-node/register --require src/features/**/*.steps.ts src/features/*.feature --language pt --format json:cucumber-report.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles --forceExit",
+        "test:cucumber": "NODE_ENV=test cucumber-js --require-module ts-node/register --require src/features/**/*.steps.ts src/features/*.feature --language pt --format json:cucumber-report.json --exit"
     },
     "dependencies": {
         "@nestjs/axios": "^3.0.2",
