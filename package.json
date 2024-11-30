@@ -99,7 +99,8 @@
             "/src/infrastructure/health/",
             "/src/app.module.ts",
             "/src/main.ts",
-            "Parceiro"
+            "Parceiro",
+            "/src/core/external/client/fiap-pedidos-api.client.ts"
         ],
         "coverageThreshold": {
             "global": {
