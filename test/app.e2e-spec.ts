@@ -3,6 +3,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 
+const nock = require('nock');
+
 const Intencao = {
   valor: 100,
 };
@@ -50,9 +52,15 @@ describe('Testes de Integração', () => {
       await request(app.getHttpServer()).post('/pagamentos').send(Intencao)
     ).body.id;
 
+    expect(intencaoId).toBeDefined()
+    
+    nock('http://fiap-pedidos-api.com')
+      .patch('/pedidos/webhook/pagamento/'+ intencaoId, {'status': 'PREPARACAO'})
+      .reply(200, { status: 'PREPARACAO' });
+
     return await request(app.getHttpServer())
       .post('/pagamentos/webhook/' + intencaoId)
-      .send()
+      .send(atualizarIntencao)
       .expect(HttpStatus.OK);
   });
 });

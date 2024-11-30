@@ -4,6 +4,9 @@ import { IntencaoPagamentoGateway } from '../adapters/gateways/intencaoPagamento
 import { AtualizarIntencaoPagamentoDTO } from '../dto/atualizarIntencaoPagamentoDTO';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { IntencaoPagamento } from '../entities/intencaoPagamento';
+import { fiapPedidosApiClient } from '../external/client/fiap-pedidos-api.client';
+
+jest.mock('../external/client/fiap-pedidos-api.client');
 
 describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
   let useCase: AtualizarStatusIntencaoPagamentoUseCase;
@@ -63,7 +66,7 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
         dataFinalizacao: new Date(),
         qrCode: 'qr',
         idExterno: '321',
-        data: null
+        data: null,
       };
       const mockAtualizarIntencaoPagamentoDTO =
         new AtualizarIntencaoPagamentoDTO();
@@ -79,6 +82,9 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
           status: mockAtualizarIntencaoPagamentoDTO.status,
           dataFinalizacao: new Date(),
         });
+      jest.spyOn(fiapPedidosApiClient, 'atualizarStatusPedido').mockResolvedValue({
+        status: "FINALIZADO",
+      });
 
       const resultado = await useCase.execute(
         intencaoPagamentoGateway,
@@ -93,7 +99,7 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
       expect(resultado).toHaveProperty('dataFinalizacao');
     });
 
-    it('deve lançar HttpException se ocorrer um erro ao atualizar a IntencaoPagamento', async () => {
+    it('deve lançar HttpException se não for possível atualizar o status no serviço externo', async () => {
       const mockIntencaoPagamento: IntencaoPagamento = {
         id: '123',
         status: 'PENDENTE',
@@ -101,7 +107,7 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
         dataFinalizacao: new Date(),
         qrCode: 'qr',
         idExterno: '321',
-        data: null
+        data: null,
       };
       const mockAtualizarIntencaoPagamentoDTO =
         new AtualizarIntencaoPagamentoDTO();
@@ -112,7 +118,12 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
         .mockResolvedValue(mockIntencaoPagamento);
       jest
         .spyOn(intencaoPagamentoGateway, 'atualizarStatusIntencaoPagamento')
-        .mockRejectedValue(new Error('Erro no banco de dados'));
+        .mockResolvedValue({
+          ...mockIntencaoPagamento,
+          status: mockAtualizarIntencaoPagamentoDTO.status,
+          dataFinalizacao: new Date(),
+        });
+      jest.spyOn(fiapPedidosApiClient, 'atualizarStatusPedido').mockResolvedValue({});
 
       await expect(
         useCase.execute(
@@ -123,7 +134,7 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
       ).rejects.toThrow(
         new HttpException(
           'Falha ao atualizar IntencaoPagamento. Revise os dados enviados e tente novamente.',
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.BAD_GATEWAY,
         ),
       );
     });

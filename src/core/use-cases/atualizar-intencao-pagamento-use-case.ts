@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IntencaoPagamentoGateway } from '../adapters/gateways/intencaoPagamento-gateway';
 import { AtualizarIntencaoPagamentoDTO } from '../dto/atualizarIntencaoPagamentoDTO';
 import { IntencaoPagamento } from '../entities/intencaoPagamento';
+import { fiapPedidosApiClient } from '../external/client/fiap-pedidos-api.client';
+import { IntencaoPagamentoStatusType } from '../entities/intencaoPagamentoStatus-type.enum';
 
 @Injectable()
 export class AtualizarStatusIntencaoPagamentoUseCase {
@@ -27,9 +29,19 @@ export class AtualizarStatusIntencaoPagamentoUseCase {
           id,
           atualizarStatusIntencaoPagamentoDTO,
         );
+      
+      const novoStatusPedido = atualizarStatusIntencaoPagamentoDTO.status == IntencaoPagamentoStatusType.FINALIZADO ? "PREPARACAO" : "FINALIZADO"
+      const pedidosFiapResult = await fiapPedidosApiClient.atualizarStatusPedido(id, novoStatusPedido)
+      if (!pedidosFiapResult.status) {
+        throw new HttpException(
+          'Não foi possível atualizar status do pedido.',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
 
       return result;
     } catch (erro) {
+      console.log(erro.message)
       throw new HttpException(
         'Falha ao atualizar IntencaoPagamento. Revise os dados enviados e tente novamente.',
         HttpStatus.BAD_REQUEST,
