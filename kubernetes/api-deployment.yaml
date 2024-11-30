@@ -4,7 +4,7 @@ metadata:
   name: fiap-pagamentos-api-deployment
   namespace: fiap-pagamentos-api
   labels:
-    app: fiap-pagamentos-api-deployment
+    app: fiap-pagamentos-api
 spec:
   template:
     metadata:
