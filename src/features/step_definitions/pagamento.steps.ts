@@ -8,6 +8,7 @@ import { AtualizarIntencaoPagamentoDTO } from '../../core/dto/atualizarIntencaoP
 import { IntencaoPagamentoStatusType } from '../../core/entities/intencaoPagamentoStatus-type.enum';
 import { ObjectId } from 'mongodb';
 import { CriarIntencaoPagamentoDTO } from '../../core/dto/criarIntencaoPagamentoDTO';
+const nock = require('nock');
 
 let app: INestApplication;
 let response: any;
@@ -53,6 +54,10 @@ When('realizado o cadastro de intenção de pagamento', async () => {
 });
 
 When('realizado a busca do Intenção de Pagamento por ID', async () => {
+  nock('http://fiap-pedidos-api.com')
+  .patch('/pedidos/webhook/pagamento/'+ idIntencao, {'status': 'PREPARACAO'})
+  .reply(200, { status: 'PREPARACAO' });
+  
   response = await request(app.getHttpServer())
     .get('/pagamentos/' + idIntencao)
     .send();
@@ -63,6 +68,11 @@ When('realizado a atualização de Intenção de Pagamento por ID', async () => 
     status: IntencaoPagamentoStatusType.FINALIZADO,
     dataFinalizacao: new Date(),
   };
+
+  nock('http://fiap-pedidos-api.com')
+  .patch('/pedidos/webhook/pagamento/'+ idIntencao, {'status': 'PREPARACAO'})
+  .reply(200, { status: 'PREPARACAO' });
+
   response = await request(app.getHttpServer())
     .post('/pagamentos/webhook/' + idIntencao)
     .send(atualizarIntencaoPagamentoDTO);
