@@ -41,6 +41,7 @@ export class AtualizarStatusIntencaoPagamentoUseCase {
 
       return result;
     } catch (erro) {
+      console.log(erro.message)
       throw new HttpException(
         'Falha ao atualizar IntencaoPagamento. Revise os dados enviados e tente novamente.',
         HttpStatus.BAD_REQUEST,
