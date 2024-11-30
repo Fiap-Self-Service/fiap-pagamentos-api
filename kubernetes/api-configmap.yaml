@@ -6,7 +6,7 @@ metadata:
   labels:
     name: fiap-pagamentos-api-config
 data:
-  DOCUMENT_DATABASE_HOST: "a26c51a7d801b4b5c92df2cae3593736-202280698.us-east-1.elb.amazonaws.com"
+  DOCUMENT_DATABASE_HOST: "172.20.255.166"
   DOCUMENT_DATABASE_PORT: "27017"
   APPLICATION_PORT: "3003"
   PAGAMENTOS_ENDPOINT: "http://172.20.47.49:3002"
