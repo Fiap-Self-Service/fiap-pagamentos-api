@@ -3,6 +3,7 @@ import { IntencaoPagamentoGateway } from '../adapters/gateways/intencaoPagamento
 import { AtualizarIntencaoPagamentoDTO } from '../dto/atualizarIntencaoPagamentoDTO';
 import { IntencaoPagamento } from '../entities/intencaoPagamento';
 import { fiapPedidosApiClient } from '../external/client/fiap-pedidos-api.client';
+import { IntencaoPagamentoStatusType } from '../entities/intencaoPagamentoStatus-type.enum';
 
 @Injectable()
 export class AtualizarStatusIntencaoPagamentoUseCase {
@@ -28,9 +29,10 @@ export class AtualizarStatusIntencaoPagamentoUseCase {
           id,
           atualizarStatusIntencaoPagamentoDTO,
         );
-
-      const pedidosFiapResult = await fiapPedidosApiClient.atualizarStatusPedido(id, atualizarStatusIntencaoPagamentoDTO.status)
-      if (pedidosFiapResult.status !== HttpStatus.CREATED) {
+      
+      const novoStatusPedido = atualizarStatusIntencaoPagamentoDTO.status == IntencaoPagamentoStatusType.FINALIZADO ? "PREPARACAO" : "FINALIZADO"
+      const pedidosFiapResult = await fiapPedidosApiClient.atualizarStatusPedido(id, novoStatusPedido)
+      if (!pedidosFiapResult.status) {
         throw new HttpException(
           'Não foi possível atualizar status do pedido.',
           HttpStatus.UNPROCESSABLE_ENTITY,

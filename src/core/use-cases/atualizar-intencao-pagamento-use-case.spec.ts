@@ -83,7 +83,7 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
           dataFinalizacao: new Date(),
         });
       jest.spyOn(fiapPedidosApiClient, 'atualizarStatusPedido').mockResolvedValue({
-        status: HttpStatus.CREATED,
+        status: "FINALIZADO",
       });
 
       const resultado = await useCase.execute(
@@ -123,9 +123,7 @@ describe('AtualizarStatusIntencaoPagamentoUseCase', () => {
           status: mockAtualizarIntencaoPagamentoDTO.status,
           dataFinalizacao: new Date(),
         });
-      jest.spyOn(fiapPedidosApiClient, 'atualizarStatusPedido').mockResolvedValue({
-        status: HttpStatus.BAD_REQUEST,
-      });
+      jest.spyOn(fiapPedidosApiClient, 'atualizarStatusPedido').mockResolvedValue({});
 
       await expect(
         useCase.execute(
