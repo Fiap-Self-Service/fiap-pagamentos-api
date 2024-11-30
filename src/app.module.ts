@@ -15,6 +15,7 @@ import { HttpModule } from '@nestjs/axios';
 import { IPagamentoClient } from './core/external/client/pagamento-client.interface';
 import { PagamentoMockClient } from './core/external/client/pagamentoMock-client';
 import { CriarIntencaoPagamentoController } from './core/adapters/controllers/criarIntencaoPagamento-controller';
+import { HealthModule } from './infrastructure/health/health.module';
 
 @Module({
   providers: [
@@ -50,7 +51,7 @@ import { CriarIntencaoPagamentoController } from './core/adapters/controllers/cr
     },
   ],
   controllers: [PagamentosAPIController],
-  imports: [DatabaseModule, HttpModule],
+  imports: [DatabaseModule, HttpModule, HealthModule],
   exports: [IntencaoPagamentoGateway],
 })
 export class AppModule {}
