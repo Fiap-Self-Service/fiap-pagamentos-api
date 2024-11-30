@@ -4,7 +4,7 @@ metadata:
   name: fiap-pagamentos-api-deployment
   namespace: fiap-pagamentos-api
   labels:
-    app: fiap-pagamentos-api
+    app: fiap-pagamentos-api-deployment
 spec:
   template:
     metadata:
@@ -16,7 +16,7 @@ spec:
         - name: fiap-pagamentos-api-deployment-container
           image: jacksoncarbonera/fiap-pagamentos-api
           ports:
-            - containerPort: 3000
+            - containerPort: 3003
           envFrom:
           - configMapRef:
               name: fiap-pagamentos-api-config 
@@ -25,14 +25,14 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 3000
+              port: 3003
             periodSeconds: 10
             failureThreshold: 3
             initialDelaySeconds: 20
           readinessProbe:
             httpGet:
               path: /health
-              port: 3000
+              port: 3003
             periodSeconds: 10
             failureThreshold: 5
             initialDelaySeconds: 3
